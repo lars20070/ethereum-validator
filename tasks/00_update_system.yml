@@ -1,0 +1,26 @@
+- name: Update apt-get repo and cache
+  become: yes
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+
+- name: Upgrade all packages on servers
+  become: yes
+  apt:
+    upgrade: dist
+    force_apt_get: yes
+
+- name: Check if reboot is necessary
+  register: reboot_required
+  stat: path=/var/run/reboot-required get_md5=no
+
+- name: Reboot
+  become: yes
+  reboot:
+    msg: Rebooting machine
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+  when: reboot_required.stat.exists

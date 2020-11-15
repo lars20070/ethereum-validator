@@ -1,0 +1,17 @@
+[Unit]
+Description=Ethereum go client
+After=network.target 
+Wants=network.target
+
+[Service]
+{% if not ethv_docker %}
+User=goeth
+Group=goeth
+{% endif %}
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart=geth --{{ ethv_net }} --http --datadir /var/lib/goethereum
+
+[Install]
+WantedBy=default.target

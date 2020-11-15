@@ -1,0 +1,50 @@
+- name: Add the user node_exporter
+  become: yes
+  user:
+    name: node_exporter
+    comment: node_exporter user with no shell access
+    shell: /bin/false
+
+- name: Check if node_exporter is already installed
+  stat:
+    path: /usr/local/bin/node_exporter
+  register: stat_result
+
+- name: Install node_exporter
+  block:
+  - name: Download node_exporter
+    get_url:
+      url: "https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz"
+      dest: /tmp
+
+  - name: Unpack node_exporter
+    command:
+      cmd: "tar xvf node_exporter-1.0.1.linux-amd64.tar.gz"
+      chdir: /tmp
+
+  - name: Copy node_exporter binary to /usr/local/bin
+    become: yes
+    copy:
+      remote_src: yes
+      src: "/tmp/node_exporter-1.0.1.linux-amd64/node_exporter"
+      dest: "/usr/local/bin/node_exporter"
+      owner: node_exporter
+      group: node_exporter
+      mode: '0755'
+
+- name: Create node_exporter.service
+  become: yes
+  template:
+    src: templates/node_exporter.service.j2
+    dest: "/etc/systemd/system/node_exporter.service"
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+
+- name: Start node_exporter service
+  become: yes
+  command: "systemctl enable --now node_exporter"

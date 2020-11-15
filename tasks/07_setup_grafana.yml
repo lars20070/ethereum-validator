@@ -1,0 +1,91 @@
+- name: Import grafana repo key
+  become: true
+  shell: "curl -s https://packages.grafana.com/gpg.key | apt-key add -"
+
+- name: Add grafana repository from PPA
+  become: yes
+  command: "add-apt-repository 'deb https://packages.grafana.com/oss/deb stable main'"
+
+- name: Update apt-get repo and cache
+  become: yes
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+
+- name: Grafana apt policy settings
+  become: yes
+  command: "apt-cache policy grafana"
+
+- name: Install grafana
+  become: yes
+  apt:
+    name: grafana
+    state: present
+
+- name: Start grafana service
+  become: yes
+  command: "systemctl enable --now grafana-server"
+
+- name: Wait for grafana to be up
+  uri:
+    url: http://localhost:3000
+    method: GET
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 1
+
+- name: Create Api Token
+  uri:
+    url: http://localhost:3000/api/auth/keys
+    method: POST
+    headers:
+      Content-Type: application/json
+    body:
+      name: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+      role: "Admin"
+    body_format: json
+    url_username: admin
+    url_password: admin
+    validate_certs: false
+    force_basic_auth: yes
+  register: grafana_auth
+
+- name: Check if Prometheus Datasource already exists
+  uri:
+    url: http://localhost:3000/api/datasources/id/Prometheus
+    method: GET
+    headers:
+      Authorization: "Bearer {{ grafana_auth.json.key }}"
+      Content-Type: application/json
+    body_format: json
+    validate_certs: false
+  register: datasource
+  ignore_errors: true
+
+- name: Create Prometheus Datasource
+  uri:
+    url: http://localhost:3000/api/datasources
+    method: POST
+    headers:
+      Authorization: "Bearer {{ grafana_auth.json.key }}"
+      Content-Type: application/json
+    body: "{{ lookup('file', 'grafana-datasource.json') }}"
+    body_format: json
+    validate_certs: false
+  when: datasource is not defined or datasource.json.id is not defined
+
+- name: Upload Dashboard
+  uri:
+    url: http://localhost:3000/api/dashboards/db
+    method: POST
+    headers:
+      Authorization: "Bearer {{ grafana_auth.json.key }}"
+      Content-Type: application/json
+    body:
+      dashboard: "{{ lookup('file', 'grafana-dashboard.json') }}"
+      overwrite: true
+    body_format: json
+    validate_certs: false

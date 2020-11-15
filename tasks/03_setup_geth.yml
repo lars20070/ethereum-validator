@@ -1,0 +1,49 @@
+- name: Add geth stable repository from PPA
+  become: yes
+  apt_repository:
+    repo: ppa:ethereum/ethereum
+
+- name: Update apt-get repo and cache
+  become: yes
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+
+- name: Install geth
+  become: yes
+  apt:
+    name: geth
+    state: present
+
+- name: Add the user goeth
+  become: yes
+  user:
+    name: goeth
+    create_home: no
+    comment: Geth user with no shell access
+    shell: /bin/false
+
+- name: Create datadir for the Eth1.0 chain
+  become: yes
+  file:
+    path: /var/lib/goethereum
+    state: directory
+    mode: '0755'
+    owner: goeth
+    group: goeth
+
+- name: Create geth systemd service file
+  become: yes
+  template:
+    src: "templates/geth.service.j2"
+    dest: /etc/systemd/system/geth.service
+    owner: root
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+
+- name: Start geth service
+  become: yes
+  command: "systemctl enable --now geth"

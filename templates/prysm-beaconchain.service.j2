@@ -1,0 +1,17 @@
+[Unit]
+Description=Prysm Beaconchain
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+{% if not ethv_docker %}
+User=prysm-beaconchain
+Group=prysm-beaconchain
+{% endif %}
+Restart=always
+RestartSec=5
+ExecStart={{ ethv_beacon_chain_binary }} --{{ ethv_prysm_net }} --p2p-host-ip={{ ethv_node_ip }} --datadir=/var/lib/prysm/beaconchain --http-web3provider=http://127.0.0.1:8545 --accept-terms-of-use
+
+[Install]
+WantedBy=multi-user.target

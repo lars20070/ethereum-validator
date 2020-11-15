@@ -1,0 +1,32 @@
+- name: Check ntp service
+  become: yes
+  command: "systemctl is-active ntp"
+  register: ntp_active
+  ignore_errors: true
+
+- name: Disable timesyncd
+  become: yes
+  command: "timedatectl set-ntp no"
+  when: "'inactive' in ntp_active.stdout"
+
+- name: Run timedatectl
+  command: "timedatectl show"
+  register: timedatectl_output
+
+- fail:
+  when: "'NTP=no' not in timedatectl_output.stdout"
+
+- name: Install ntp
+  apt:
+    name: ntp
+    state: present
+
+- name: Enable ntp service
+  command: "systemctl enable --now ntp"
+
+- name: Run ntpq -c rv
+  command: "ntpq -c rv"
+  register: ntpq_output
+  retries: 3
+  delay: 10
+  until: "'leap_none' in ntpq_output.stdout"

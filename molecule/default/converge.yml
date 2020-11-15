@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include ethereum-validator"
+      include_role:
+        name: "ethereum-validator"

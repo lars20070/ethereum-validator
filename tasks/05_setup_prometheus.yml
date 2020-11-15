@@ -1,0 +1,103 @@
+- name: Add the user prometheus
+  become: yes
+  user:
+    name: prometheus
+    comment: prometheus user with no shell access
+    shell: /bin/false
+
+- name: Create config directory for prometheus
+  file:
+    path: /etc/prometheus
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+
+- name: Create data directory for prometheus
+  file:
+    path: /var/lib/prometheus
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+
+- name: Check if prometheus is already installed
+  stat:
+    path: /usr/local/bin/prometheus
+  register: stat_result
+
+- name: Install prometheus
+  block:
+  - name: Download prometheus
+    get_url:
+      url: "https://github.com/prometheus/prometheus/releases/download/v2.22.0/prometheus-2.22.0.linux-amd64.tar.gz"
+      dest: /tmp
+
+  - name: Unpack prometheus
+    command:
+      cmd: "tar xvf prometheus-2.22.0.linux-amd64.tar.gz"
+      chdir: /tmp
+
+  - name: Copy prometheus binary to /usr/local/bin
+    become: yes
+    copy:
+      remote_src: yes
+      src: "/tmp/prometheus-2.22.0.linux-amd64/prometheus"
+      dest: "/usr/local/bin/prometheus"
+      owner: prometheus
+      group: prometheus
+      mode: '0755'
+
+  - name: Copy promtool binary to /usr/local/bin
+    become: yes
+    copy:
+      remote_src: yes
+      src: "/tmp/prometheus-2.22.0.linux-amd64/promtool"
+      dest: "/usr/local/bin/promtool"
+      owner: prometheus
+      group: prometheus
+      mode: '0755'
+
+  - name: Copy prometheus consoles to /etc/prometheus
+    become: yes
+    copy:
+      remote_src: yes
+      src: "/tmp/prometheus-2.22.0.linux-amd64/consoles"
+      dest: "/etc/prometheus/"
+      owner: prometheus
+      group: prometheus
+
+  - name: Copy prometheus console_libraries to /etc/prometheus
+    become: yes
+    copy:
+      remote_src: yes
+      src: "/tmp/prometheus-2.22.0.linux-amd64/console_libraries"
+      dest: "/etc/prometheus/"
+      owner: prometheus
+      group: prometheus
+  when: not stat_result.stat.exists
+
+- name: Create prometheus.yml
+  become: yes
+  copy:
+    src: files/prometheus.yml
+    dest: "/etc/prometheus/prometheus.yml"
+    owner: prometheus
+    group: prometheus
+
+- name: Create prometheus.service
+  become: yes
+  template:
+    src: templates/prometheus.service.j2
+    dest: "/etc/systemd/system/prometheus.service"
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+
+- name: Start prometheus service
+  become: yes
+  command: "systemctl enable --now prometheus"
