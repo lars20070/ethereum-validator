@@ -1,6 +1,6 @@
 galaxy_info:
   author: Maximilian Meister
-  description: Software Engineer
+  description: Setup an Ethereum 2.0 validator node
   company: DATEV eG
   license: MIT
   min_ansible_version: 2.9
