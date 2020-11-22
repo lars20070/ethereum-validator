@@ -31,7 +31,7 @@
 
     - name: Set beacon-chain binary fact
       set_fact:
-        ethv_beacon_chain_binary: "{{ download_beaconchain_output.stdout | regex_search('(?<=Verified)(.*)(?=has been signed)') | trim }}"
+        ethv_prysm_beacon_chain_binary: "{{ download_beaconchain_output.stdout | regex_search('(?<=Verified)(.*)(?=has been signed)') | trim }}"
 
     - name: Download and verify latest validator binary
       command: prysm.sh validator --download-only
@@ -39,7 +39,7 @@
 
     - name: Set validator binary fact
       set_fact:
-        ethv_validator_binary: "{{ download_validator_output.stdout | regex_search('(?<=Verified)(.*)(?=has been signed)') | trim }}"
+        ethv_prysm_validator_binary: "{{ download_validator_output.stdout | regex_search('(?<=Verified)(.*)(?=has been signed)') | trim }}"
 
 - name: Build prysm from source
   when: ethv_prysm_build_from_source
@@ -175,7 +175,7 @@
 
 - name: Check if account is already imported
   become: yes
-  command: "prysm.sh validator -- accounts list --{{ ethv_prysm_net }} --wallet-dir /var/lib/prysm/validator --accept-terms-of-use --wallet-password-file /var/lib/prysm/validator/walletpassword.txt"
+  command: "prysm.sh validator -- accounts list --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator --accept-terms-of-use --wallet-password-file /var/lib/prysm/validator/walletpassword.txt"
   register: accounts_list
   failed_when:
     - accounts_list.rc != 0
@@ -201,7 +201,7 @@
 
 - name: Import validator account
   become: yes
-  command: "prysm.sh validator -- accounts import --keys-dir=/root/.validator_keys --accept-terms-of-use --{{ ethv_prysm_net }} --wallet-dir /var/lib/prysm/validator/ --wallet-password-file /var/lib/prysm/validator/walletpassword.txt --account-password-file /var/lib/prysm/validator/validatorpassword.txt"
+  command: "prysm.sh validator -- accounts import --keys-dir=/root/.validator_keys --accept-terms-of-use --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator/ --wallet-password-file /var/lib/prysm/validator/walletpassword.txt --account-password-file /var/lib/prysm/validator/validatorpassword.txt"
   # when not alrady imported
   when: not ethv_prysm_account_pubkey in ethv_prysm_account_list_pubkey
 

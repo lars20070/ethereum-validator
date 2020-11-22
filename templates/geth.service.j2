@@ -11,7 +11,7 @@ Group=goeth
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=geth --{{ ethv_net }} --http --datadir /var/lib/goethereum
+ExecStart=geth --{{ ethv_10_net }} --http --datadir /var/lib/goethereum
 
 [Install]
 WantedBy=default.target

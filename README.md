@@ -63,25 +63,16 @@ Role Variables
 ethv_number_validators: "1"
 
 # Ethereum 1.0 Chain network
-ethv_net: goerli
+ethv_10_net: goerli
+
+# Ethereum 2.0 Client network
+ethv_20_net: pyrmont
 
 # Running inside docker requires systemd services to run as root
 ethv_docker: yes
 
-# If not built from source, the official prysm.sh installer is used
-ethv_prysm_build_from_source: no
-
-# Path to the beacon-chain binary
-ethv_beacon_chain_binary: "/usr/local/bin/beacon-chain"
-
-# Path to the validator binary
-ethv_validator_binary: "/usr/local/bin/validator"
-
 # External Node IP
 ethv_node_ip: ""
-
-# Prysm network
-ethv_prysm_net: pyrmont
 
 # Validator Password used during key generation
 ethv_validator_password: "eth2.0-deposit-cli"
@@ -91,6 +82,19 @@ ethv_wallet_password: "eth2.0-deposit-cli"
 
 # String to include in proposed blocks
 ethv_graffiti: "helloitsme"
+
+#
+# Prysm eth2.0 client specific - https://github.com/prysmaticlabs/prysm
+#
+
+# If not built from source, the official prysm.sh installer is used
+ethv_prysm_build_from_source: no
+
+# Path to the beacon-chain binary
+ethv_prysm_beacon_chain_binary: "/usr/local/bin/beacon-chain"
+
+# Path to the validator binary
+ethv_prysm_validator_binary: "/usr/local/bin/validator"
 ```
 
 Dependencies
