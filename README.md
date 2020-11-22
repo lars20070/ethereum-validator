@@ -55,6 +55,23 @@ molecule converge
 
 `molecule test`
 
+### Persisting chain data/state
+
+By default a new docker container will not persist any ETH1.0 or ETH2.0 state.
+
+To enable persistence, you have to add the ETH1.0 and ETH2.0 datadirs to the `molecule/default/molecule.yml` file  under `platforms.[platform].volumes`
+
+Here's an example:
+
+```yaml
+...
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /home/$USER/.ethereum:/var/lib/goethereum
+      - /home/$USER/.eth2:/var/lib/prysm
+...
+```
+
 Role Variables
 --------------
 
