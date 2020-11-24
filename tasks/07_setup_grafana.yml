@@ -48,7 +48,7 @@
       role: "Admin"
     body_format: json
     url_username: admin
-    url_password: admin
+    url_password: "{{ ethv_grafana_admin_password }}"
     validate_certs: false
     force_basic_auth: yes
   register: grafana_auth

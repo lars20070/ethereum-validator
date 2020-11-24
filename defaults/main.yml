@@ -26,6 +26,9 @@ ethv_wallet_password: "eth2.0-deposit-cli"
 # String to include in proposed blocks
 ethv_graffiti: "helloitsme"
 
+# Grafana admin password
+ethv_grafana_admin_password: "admin"
+
 #
 # Prysm eth2.0 client specific - https://github.com/prysmaticlabs/prysm
 #
