@@ -1,4 +1,7 @@
 ---
+# SSH Port
+ethv_ssh_port: "22"
+
 # Number of validators
 ethv_number_validators: "1"
 
