@@ -6,10 +6,10 @@ ethv_ssh_port: "22"
 ethv_number_validators: "1"
 
 # Ethereum 1.0 Chain network
-ethv_10_net: goerli
+ethv_10_net: ""
 
 # Ethereum 2.0 Client network
-ethv_20_net: pyrmont
+ethv_20_net: mainnet
 
 # Running inside docker requires systemd services to run as root
 ethv_docker: yes
