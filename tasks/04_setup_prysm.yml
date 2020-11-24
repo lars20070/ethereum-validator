@@ -15,6 +15,7 @@
     ethv_node_ip: "{{ node_ip.stdout }}"
 
 - name: Setup prysm from prysm.sh
+  become: yes
   when: not ethv_prysm_build_from_source
   block:
     - name: Copy prysm.sh to remote node
@@ -99,6 +100,7 @@
     shell: /bin/false
 
 - name: Create data directory for beacon-chain
+  become: yes
   file:
     path: /var/lib/prysm/beaconchain
     state: directory
@@ -107,6 +109,7 @@
     mode: '0755'
 
 - name: Copy prysm-beaconchain.service to remote node
+  become: yes
   template:
     src: templates/prysm-beaconchain.service.j2
     dest: /etc/systemd/system/prysm-beaconchain.service
@@ -131,6 +134,7 @@
     mode: '0700'
 
 - name: Copy validator_keys to remote node
+  become: yes
   copy:
     src: "{{ item }}"
     dest: "/root/.validator_keys"
@@ -150,6 +154,7 @@
     shell: /bin/false
 
 - name: Create data directory for validator
+  become: yes
   file:
     path: /var/lib/prysm/validator
     state: directory
@@ -158,6 +163,7 @@
     mode: '0755'
 
 - name: Create password for validator
+  become: yes
   copy:
     content: "{{ ethv_validator_password }}"
     dest: /var/lib/prysm/validator/validatorpassword.txt
@@ -166,6 +172,7 @@
     group: prysm-validator
 
 - name: Create password for the wallet
+  become: yes
   copy:
     content: "{{ ethv_wallet_password }}"
     dest: /var/lib/prysm/validator/walletpassword.txt
@@ -206,6 +213,7 @@
   when: not ethv_prysm_account_pubkey in ethv_prysm_account_list_pubkey
 
 - name: Copy prysm-validator.service to remote node
+  become: yes
   template:
     src: templates/prysm-validator.service.j2
     dest: /etc/systemd/system/prysm-validator.service

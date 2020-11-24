@@ -17,11 +17,13 @@
   when: "'NTP=no' not in timedatectl_output.stdout"
 
 - name: Install ntp
+  become: yes
   apt:
     name: ntp
     state: present
 
 - name: Enable ntp service
+  become: yes
   command: "systemctl enable --now ntp"
 
 - name: Run ntpq -c rv

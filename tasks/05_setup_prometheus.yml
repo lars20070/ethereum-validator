@@ -6,6 +6,7 @@
     shell: /bin/false
 
 - name: Create config directory for prometheus
+  become: yes
   file:
     path: /etc/prometheus
     state: directory
@@ -14,6 +15,7 @@
     mode: '0755'
 
 - name: Create data directory for prometheus
+  become: yes
   file:
     path: /var/lib/prometheus
     state: directory
