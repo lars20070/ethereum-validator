@@ -130,18 +130,20 @@
 - name: Create directory for validator keys
   become: yes
   file:
-    path: "/root/.validator_keys"
+    path: "/home/prysm-validator/.validator_keys"
     state: directory
+    owner: prysm-validator
+    group: prysm-validator
     mode: '0700'
 
 - name: Copy validator_keys to remote node
   become: yes
   copy:
     src: "{{ item }}"
-    dest: "/root/.validator_keys"
+    dest: "/home/prysm-validator/.validator_keys"
     mode: '0600'
-    owner: root
-    group: root
+    owner: prysm-validator
+    group: prysm-validator
   with_fileglob:
     - "files/validator_keys/*"
 
@@ -183,6 +185,7 @@
 
 - name: Check if account is already imported
   become: yes
+  become_user: prysm-validator
   command: "prysm.sh validator -- accounts list --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator --accept-terms-of-use --wallet-password-file /var/lib/prysm/validator/walletpassword.txt"
   register: accounts_list
   failed_when:
@@ -209,8 +212,9 @@
 
 - name: Import validator account
   become: yes
-  command: "prysm.sh validator -- accounts import --keys-dir=/root/.validator_keys --accept-terms-of-use --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator/ --wallet-password-file /var/lib/prysm/validator/walletpassword.txt --account-password-file /var/lib/prysm/validator/validatorpassword.txt"
-  # when not alrady imported
+  become_user: prysm-validator
+  command: "prysm.sh validator -- accounts import --keys-dir=/home/prysm-validator/.validator_keys --accept-terms-of-use --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator/ --wallet-password-file /var/lib/prysm/validator/walletpassword.txt --account-password-file /var/lib/prysm/validator/validatorpassword.txt"
+  # when not already imported
   when: not ethv_prysm_account_pubkey in ethv_prysm_account_list_pubkey
 
 - name: Copy prysm-validator.service to remote node
