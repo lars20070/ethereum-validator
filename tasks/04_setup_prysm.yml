@@ -13,6 +13,7 @@
 
 - set_fact:
     ethv_node_ip: "{{ node_ip.stdout }}"
+  when: ethv_node_ip == ""
 
 - name: Setup prysm from prysm.sh
   become: yes
