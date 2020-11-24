@@ -8,7 +8,7 @@
 - name: Upgrade all packages on servers
   become: yes
   apt:
-    upgrade: dist
+    upgrade: safe
     force_apt_get: yes
 
 - name: Check if reboot is necessary
