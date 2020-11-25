@@ -23,6 +23,21 @@
     name: grafana
     state: present
 
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+
+- name: Check if grafana is already running
+  become: true
+  command: "systemctl is-active grafana-server"
+  register: service
+  ignore_errors: yes
+
+- name: Restart grafana if it was already running
+  become: true
+  command: "systemctl restart grafana-server"
+  when: '"inactive" not in service.stdout'
+
 - name: Start grafana service
   become: yes
   command: "systemctl enable --now grafana-server"

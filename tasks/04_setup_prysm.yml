@@ -122,6 +122,17 @@
   become: yes
   command: "systemctl daemon-reload"
 
+- name: Check if prysm-beaconchain is already running
+  become: true
+  command: "systemctl is-active prysm-beaconchain"
+  register: service
+  ignore_errors: yes
+
+- name: Restart prysm-beaconchain if it was already running
+  become: true
+  command: "systemctl restart prysm-beaconchain"
+  when: '"inactive" not in service.stdout'
+
 - name: Start prysm-beaconchain service
   become: yes
   command: "systemctl enable --now prysm-beaconchain"
@@ -229,6 +240,17 @@
 - name: Reload systemd
   become: yes
   command: "systemctl daemon-reload"
+
+- name: Check if prysm-validator is already running
+  become: true
+  command: "systemctl is-active prysm-validator"
+  register: service
+  ignore_errors: yes
+
+- name: Restart prysm-validator if it was already running
+  become: true
+  command: "systemctl restart prysm-validator"
+  when: '"inactive" not in service.stdout'
 
 - name: Start prysm-validator service
   become: yes

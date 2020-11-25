@@ -44,6 +44,17 @@
   become: yes
   command: "systemctl daemon-reload"
 
+- name: Check if geth is already running
+  become: true
+  command: "systemctl is-active geth"
+  register: service
+  ignore_errors: yes
+
+- name: Restart geth if it was already running
+  become: true
+  command: "systemctl restart geth"
+  when: '"inactive" not in service.stdout'
+
 - name: Start geth service
   become: yes
   command: "systemctl enable --now geth"

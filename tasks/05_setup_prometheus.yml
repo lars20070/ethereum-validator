@@ -100,6 +100,17 @@
   become: yes
   command: "systemctl daemon-reload"
 
+- name: Check if prometheus is already running
+  become: true
+  command: "systemctl is-active prometheus"
+  register: service
+  ignore_errors: yes
+
+- name: Restart prometheus if it was already running
+  become: true
+  command: "systemctl restart prometheus"
+  when: '"inactive" not in service.stdout'
+
 - name: Start prometheus service
   become: yes
   command: "systemctl enable --now prometheus"
