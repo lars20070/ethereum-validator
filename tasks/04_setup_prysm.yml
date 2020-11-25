@@ -137,6 +137,15 @@
   become: yes
   command: "systemctl enable --now prysm-beaconchain"
 
+# Set up validator
+- name: Add the user prysm-validator
+  become: yes
+  user:
+    name: prysm-validator
+    create_home: yes
+    comment: prysm-validator user with no shell access
+    shell: /bin/false
+
 # Upload validator keys
 - name: Create directory for validator keys
   become: yes
@@ -157,15 +166,6 @@
     group: prysm-validator
   with_fileglob:
     - "files/validator_keys/*"
-
-# Set up validator
-- name: Add the user prysm-validator
-  become: yes
-  user:
-    name: prysm-validator
-    create_home: yes
-    comment: prysm-validator user with no shell access
-    shell: /bin/false
 
 - name: Create data directory for validator
   become: yes
