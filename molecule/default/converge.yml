@@ -1,6 +1,9 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    ethv_10_net: goerli
+    ethv_20_net: pyrmont
   tasks:
     - name: "Include ethereum-validator"
       include_role:
