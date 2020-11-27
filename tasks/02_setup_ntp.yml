@@ -29,6 +29,6 @@
 - name: Run ntpq -c rv
   command: "ntpq -c rv"
   register: ntpq_output
-  retries: 3
+  retries: 6
   delay: 10
   until: "'leap_none' in ntpq_output.stdout"

@@ -12,6 +12,7 @@ ethv_10_net: ""
 ethv_20_net: mainnet
 
 # Running inside docker requires systemd services to run as root
+# Make sure to set this to "no" if you run on a VM or on bare-metal
 ethv_docker: yes
 
 # External Node IP
@@ -28,6 +29,9 @@ ethv_graffiti: "helloitsme"
 
 # Grafana admin password
 ethv_grafana_admin_password: "admin"
+
+# Name of the validator_keys folder in files/ - useful if you test with multiple different ones
+ethv_validator_keys_folder: "validator_keys"
 
 #
 # Prysm eth2.0 client specific - https://github.com/prysmaticlabs/prysm

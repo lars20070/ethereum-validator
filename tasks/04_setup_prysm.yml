@@ -166,7 +166,7 @@
     owner: prysm-validator
     group: prysm-validator
   with_fileglob:
-    - "files/validator_keys/*"
+    - "files/{{ ethv_validator_keys_folder }}/*"
 
 - name: Create data directory for validator
   become: yes
@@ -213,7 +213,7 @@
 
 - name: Get deposit_data filename
   set_fact:
-    deposit_data_filepath: "{{ lookup('fileglob', 'files/validator_keys/deposit_data*.json') }}"
+    deposit_data_filepath: "{{ lookup('fileglob', 'files/{{ ethv_validator_keys_folder }}/deposit_data*.json') }}"
 
 - name: Set Account pubkey fact
   set_fact:

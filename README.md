@@ -76,16 +76,20 @@ Role Variables
 --------------
 
 ```yaml
+# SSH Port
+ethv_ssh_port: "22"
+
 # Number of validators
 ethv_number_validators: "1"
 
 # Ethereum 1.0 Chain network
-ethv_10_net: goerli
+ethv_10_net: ""
 
 # Ethereum 2.0 Client network
-ethv_20_net: pyrmont
+ethv_20_net: mainnet
 
 # Running inside docker requires systemd services to run as root
+# Make sure to set this to "no" if you run on a VM or on bare-metal
 ethv_docker: yes
 
 # External Node IP
@@ -99,6 +103,12 @@ ethv_wallet_password: "eth2.0-deposit-cli"
 
 # String to include in proposed blocks
 ethv_graffiti: "helloitsme"
+
+# Grafana admin password
+ethv_grafana_admin_password: "admin"
+
+# Name of the validator_keys folder in files/ - useful if you test with multiple different ones
+ethv_validator_keys_folder: "validator_keys"
 
 #
 # Prysm eth2.0 client specific - https://github.com/prysmaticlabs/prysm

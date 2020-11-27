@@ -13,6 +13,18 @@
   register: reboot_required
   stat: path=/var/run/reboot-required get_md5=no
 
+- name: Check if services are running and gracefully stop them before reboot
+  become: yes
+  shell: "systemctl is-active --quiet {{ item }} && systemctl stop {{ item }}"
+  with_items:
+    - geth
+    - prysm-beaconchain
+    - prysm-validator
+    - prometheus
+    - node_exporter
+    - grafana-server
+  when: reboot_required.stat.exists
+
 - name: Reboot
   become: yes
   reboot:
