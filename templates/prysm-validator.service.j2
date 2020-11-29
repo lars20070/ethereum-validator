@@ -11,6 +11,8 @@ Group=prysm-validator
 {% endif %}
 Restart=always
 RestartSec=5
+TimeoutSec=infinity
+ExecStartPre=/bin/sleep 780
 ExecStart={{ ethv_prysm_validator_binary }} --{{ ethv_20_net }} --datadir /var/lib/prysm/validator --wallet-dir /var/lib/prysm/validator --wallet-password-file /var/lib/prysm/validator/walletpassword.txt --graffiti "{{ ethv_graffiti }}" --accept-terms-of-use
 
 [Install]
