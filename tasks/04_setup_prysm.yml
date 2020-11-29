@@ -8,10 +8,6 @@
     - python3-dev
     - acl
 
-- name: Get Node IP
-  command: curl -s v4.ident.me
-  register: node_ip
-
 - name: Setup prysm from prysm.sh
   become: yes
   when: not ethv_prysm_build_from_source
