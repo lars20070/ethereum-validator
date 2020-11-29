@@ -78,6 +78,7 @@
     git:
       repo: "https://github.com/prysmaticlabs/prysm"
       dest: /srv/prysm
+      version: "{{ ethv_prysm_release_version | default('master') }}"
 
   - name: Build beacon-chain
     command:
