@@ -12,10 +12,6 @@
   command: curl -s v4.ident.me
   register: node_ip
 
-- set_fact:
-    ethv_node_ip: "{{ node_ip.stdout }}"
-  when: ethv_node_ip == ""
-
 - name: Setup prysm from prysm.sh
   become: yes
   when: not ethv_prysm_build_from_source

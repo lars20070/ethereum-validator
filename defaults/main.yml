@@ -18,9 +18,6 @@ ethv_20_net: mainnet
 # Make sure to set this to "no" if you run on a VM or on bare-metal
 ethv_docker: yes
 
-# External Node IP
-ethv_node_ip: ""
-
 # Validator Password used during key generation
 ethv_validator_password: "eth2.0-deposit-cli"
 
