@@ -36,7 +36,7 @@
   become: yes
   community.general.ufw:
     rule: allow
-    port: '3000'
+    port: '{{ ethv_grafana_port }}'
     proto: tcp
 
 - name: Allow Prometheus Monitoring

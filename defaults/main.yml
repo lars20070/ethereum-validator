@@ -30,6 +30,21 @@ ethv_graffiti: "helloitsme"
 # Grafana admin password
 ethv_grafana_admin_password: "admin"
 
+# Grafana protocol
+ethv_grafana_protocol: "http"
+
+# Grafana port
+ethv_grafana_port: "3000"
+
+# Grafana domain
+ethv_grafana_domain: "localhost"
+
+# Grafana certificate file
+ethv_grafana_certfile: ""
+
+# Grafana certificate key
+ethv_grafana_keyfile: ""
+
 # Name of the validator_keys folder in files/ - useful if you test with multiple different ones
 ethv_validator_keys_folder: "validator_keys"
 
