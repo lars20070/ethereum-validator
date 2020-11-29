@@ -63,3 +63,7 @@ ethv_prysm_beacon_chain_binary: "/usr/local/bin/beacon-chain"
 
 # Path to the validator binary
 ethv_prysm_validator_binary: "/usr/local/bin/validator"
+
+# Seconds to wait before starting the service
+# This acts as a slashing protection for decreasing the chance to double attestations
+ethv_prysm_pre_start_delay: 780
