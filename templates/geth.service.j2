@@ -11,7 +11,7 @@ Group=goeth
 Type=simple
 Restart=always
 RestartSec=5
-DefaultTimeoutStopSec=600
+TimeoutStopSec=600
 {% if ethv_10_net|length %}
 ExecStart=geth --{{ ethv_10_net }} --http --datadir /var/lib/goethereum
 {% else %}
