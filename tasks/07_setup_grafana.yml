@@ -54,6 +54,7 @@
     url: "{{ ethv_grafana_protocol }}://{{ ethv_grafana_domain }}:{{ ethv_grafana_port }}"
     method: GET
     status_code: 200
+    validate_certs: false
   register: result
   until: result.status == 200
   retries: 60
