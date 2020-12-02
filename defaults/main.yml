@@ -48,6 +48,9 @@ ethv_grafana_keyfile: ""
 # Name of the validator_keys folder in files/ - useful if you test with multiple different ones
 ethv_validator_keys_folder: "validator_keys"
 
+# Reboot after update
+ethv_reboot_after_update: yes
+
 #
 # Prysm eth2.0 client specific - https://github.com/prysmaticlabs/prysm
 #
