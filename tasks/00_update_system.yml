@@ -24,6 +24,7 @@
     - node_exporter
     - grafana-server
   when: reboot_required.stat.exists
+  ignore_errors: true
 
 - name: Reboot
   become: yes
