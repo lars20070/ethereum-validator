@@ -100,7 +100,7 @@
     validate_certs: false
   when: datasource is not defined or datasource.json.id is not defined
 
-- name: Upload Dashboard
+- name: Upload Prysm Dashboard
   uri:
     url: "{{ ethv_grafana_protocol }}://{{ ethv_grafana_domain }}:{{ ethv_grafana_port }}/api/dashboards/db"
     method: POST
@@ -108,7 +108,20 @@
       Authorization: "Bearer {{ grafana_auth.json.key }}"
       Content-Type: application/json
     body:
-      dashboard: "{{ lookup('file', 'grafana-dashboard.json') }}"
+      dashboard: "{{ lookup('file', 'grafana-prysm-dashboard.json') }}"
+      overwrite: true
+    body_format: json
+    validate_certs: false
+
+- name: Upload Geth Dashboard
+  uri:
+    url: "{{ ethv_grafana_protocol }}://{{ ethv_grafana_domain }}:{{ ethv_grafana_port }}/api/dashboards/db"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ grafana_auth.json.key }}"
+      Content-Type: application/json
+    body:
+      dashboard: "{{ lookup('file', 'grafana-geth-dashboard.json') }}"
       overwrite: true
     body_format: json
     validate_certs: false
