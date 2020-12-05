@@ -4,6 +4,8 @@
   vars:
     ethv_10_net: goerli
     ethv_20_net: pyrmont
+    ethv_validator_keys_folder: validator_keys_testing
+    ethv_prysm_pre_start_delay: 13
   tasks:
     - name: "Include ethereum-validator"
       include_role:

@@ -32,6 +32,8 @@ Thanks:
 Run it with molecule
 --------------------
 
+**NOTE**: Use the `files/validator_keys_testing/` directory to store your testing keys
+
 ## Docker
 
 The default deployment requires docker to be installed
