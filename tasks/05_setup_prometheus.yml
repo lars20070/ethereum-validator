@@ -95,21 +95,25 @@
     mode: '0644'
     owner: root
     group: root
-
-- name: Reload systemd
-  become: yes
-  command: "systemctl daemon-reload"
+  register: service_file_prometheus
 
 - name: Check if prometheus is already running
   become: true
   command: "systemctl is-active prometheus"
-  register: service
+  register: service_active
   ignore_errors: yes
 
-- name: Restart prometheus if it was already running
+- name: Stop prometheus if it was already running
   become: true
-  command: "systemctl restart prometheus"
-  when: '"inactive" not in service.stdout'
+  command: "systemctl stop prometheus"
+  when:
+    - service_file_prometheus.changed
+    - '"inactive" not in service_active.stdout'
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+  when: service_file_prometheus.changed
 
 - name: Start prometheus service
   become: yes

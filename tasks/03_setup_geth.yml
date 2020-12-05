@@ -39,21 +39,25 @@
     src: "templates/geth.service.j2"
     dest: /etc/systemd/system/geth.service
     owner: root
-
-- name: Reload systemd
-  become: yes
-  command: "systemctl daemon-reload"
+  register: service_file_geth
 
 - name: Check if geth is already running
   become: true
   command: "systemctl is-active geth"
-  register: service
+  register: service_active_geth
   ignore_errors: yes
 
-- name: Restart geth if it was already running
-  become: true
-  command: "systemctl restart geth"
-  when: '"inactive" not in service.stdout'
+- name: Stop Service to prevent database corruption
+  become: yes
+  command: "systemctl stop geth"
+  when:
+    - service_file_geth.changed
+    - '"inactive" not in service_active_geth.stdout'
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+  when: service_file_geth.changed
 
 - name: Start geth service
   become: yes

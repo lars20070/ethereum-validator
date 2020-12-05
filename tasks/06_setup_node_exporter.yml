@@ -41,21 +41,26 @@
     mode: '0644'
     owner: root
     group: root
-
-- name: Reload systemd
-  become: yes
-  command: "systemctl daemon-reload"
+  register: service_file_node_exporter
 
 - name: Check if node_exporter is already running
   become: true
   command: "systemctl is-active node_exporter"
-  register: service
+  register: service_active_node_exporter
   ignore_errors: yes
 
-- name: Restart node_exporter if it was already running
+- name: Stop node_exporter if it was already running
   become: true
-  command: "systemctl restart node_exporter"
-  when: '"inactive" not in service.stdout'
+  command: "systemctl stop node_exporter"
+  when:
+    - service_file_node_exporter.changed
+    - '"inactive" not in service_active_node_exporter.stdout'
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+  when:
+    - service_file_node_exporter.changed
 
 - name: Start node_exporter service
   become: yes

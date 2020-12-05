@@ -111,21 +111,25 @@
     mode: '0644'
     owner: root
     group: root
-
-- name: Reload systemd
-  become: yes
-  command: "systemctl daemon-reload"
+  register: service_file_beaconchain
 
 - name: Check if prysm-beaconchain is already running
   become: true
   command: "systemctl is-active prysm-beaconchain"
-  register: service
+  register: service_active_beaconchain
   ignore_errors: yes
 
-- name: Restart prysm-beaconchain if it was already running
-  become: true
-  command: "systemctl restart prysm-beaconchain"
-  when: '"inactive" not in service.stdout'
+- name: Stop Service to prevent database corruption
+  become: yes
+  command: "systemctl stop prysm-beaconchain"
+  when:
+    - service_file_beaconchain.changed
+    - '"inactive" not in service_active_beaconchain.stdout'
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+  when: service_file_beaconchain.changed
 
 - name: Start prysm-beaconchain service
   become: yes
@@ -230,21 +234,25 @@
     mode: '0644'
     owner: root
     group: root
-
-- name: Reload systemd
-  become: yes
-  command: "systemctl daemon-reload"
+  register: service_file_validator
 
 - name: Check if prysm-validator is already running
   become: true
   command: "systemctl is-active prysm-validator"
-  register: service
+  register: service_active_validator
   ignore_errors: yes
 
-- name: Restart prysm-validator if it was already running
-  become: true
-  command: "systemctl restart prysm-validator"
-  when: '"inactive" not in service.stdout'
+- name: Stop Service to prevent database corruption
+  become: yes
+  command: "systemctl stop prysm-validator"
+  when:
+    - service_file_validator.changed
+    - '"inactive" not in service_active_validator.stdout'
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+  when: service_file_validator.changed
 
 - name: Start prysm-validator service
   become: yes
