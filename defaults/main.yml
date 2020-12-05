@@ -2,6 +2,16 @@
 # SSH Port
 ethv_ssh_port: "22"
 
+# NTP servers for setting system time.
+ethv_ntp_servers:
+  - 0.ubuntu.pool.ntp.org
+  - 1.ubuntu.pool.ntp.org
+  - 2.ubuntu.pool.ntp.org
+  - 3.ubuntu.pool.ntp.org
+
+# Fallback NTP server (if above fail, don't set the same server here)
+ethv_ntp_fallback: ntp.ubuntu.com
+
 # Number of validators
 ethv_number_validators: "1"
 
