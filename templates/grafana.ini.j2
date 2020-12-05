@@ -482,11 +482,11 @@ cert_key = {{ ethv_grafana_keyfile }}
 
 #################################### SMTP / Emailing ##########################
 [smtp]
-;enabled = false
-;host = localhost:25
-;user =
+enabled = {{ ethv_grafana_smtp_host != "" and ethv_grafana_smtp_user != "" and ethv_grafana_smtp_password != "" }}
+host = {{ ethv_grafana_smtp_host }}
+user = {{ ethv_grafana_smtp_user }}
 # If the password contains # or ; you have to wrap it with triple quotes. Ex """#password;"""
-;password =
+password = {{ ethv_grafana_smtp_password }}
 ;cert_file =
 ;key_file =
 ;skip_verify = false

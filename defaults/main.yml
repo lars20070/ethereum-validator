@@ -45,6 +45,15 @@ ethv_grafana_certfile: ""
 # Grafana certificate key
 ethv_grafana_keyfile: ""
 
+# Grafana Mail notification smtp host (hostname:port)
+ethv_grafana_smtp_host: ""
+
+# Grafana Mail notification smtp user
+ethv_grafana_smtp_user: ""
+
+# Grafana Mail notification smtp password
+ethv_grafana_smtp_password: ""
+
 # Name of the validator_keys folder in files/ - useful if you test with multiple different ones
 ethv_validator_keys_folder: "validator_keys"
 
