@@ -5,8 +5,11 @@ ethv_ssh_port: "22"
 # Number of validators
 ethv_number_validators: "1"
 
-  # The http endpoint for an Ethereum 1.0 node (e.g. infura)
+# The http endpoint for an Ethereum 1.0 node (e.g. infura)
 ethv_10_http_provider: "http://127.0.0.1:8545"
+
+# Geth cache
+ethv_10_cache: "1024"
 
 # Ethereum 1.0 Chain network
 ethv_10_net: ""

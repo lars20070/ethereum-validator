@@ -13,9 +13,9 @@ Restart=always
 RestartSec=5
 TimeoutStopSec=600
 {% if ethv_10_net|length %}
-ExecStart=geth --metrics --pprof --{{ ethv_10_net }} --http --datadir /var/lib/goethereum
+ExecStart=geth --cache={{ ethv_10_cache }} --metrics --pprof --{{ ethv_10_net }} --http --datadir=/var/lib/goethereum
 {% else %}
-ExecStart=geth --metrics --pprof --http --datadir /var/lib/goethereum
+ExecStart=geth --cache={{ ethv_10_cache }} --metrics --pprof --http --datadir=/var/lib/goethereum
 {% endif %}
 
 [Install]
