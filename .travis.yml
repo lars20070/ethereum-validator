@@ -27,7 +27,7 @@ script:
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
   - molecule create
-  - molecule converge -- --extra-vars="ethv_validator_keys_folder='validator_keys_ci' ethv_validator_password='travisci'"
+  - molecule converge -- --extra-vars="ethv_ufw_ipv6='no' ethv_validator_keys_folder='validator_keys_ci' ethv_validator_password='travisci'"
   - molecule destroy
 
 notifications:

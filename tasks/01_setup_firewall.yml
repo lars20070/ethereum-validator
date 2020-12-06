@@ -1,3 +1,11 @@
+- name: Create ufw config file
+  become: yes
+  template:
+    src: "templates/ufw.j2"
+    dest: /etc/default/ufw
+    owner: root
+    mode: "0644"
+
 - name: Enable UFW
   become: yes
   community.general.ufw:
