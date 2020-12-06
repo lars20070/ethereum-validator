@@ -1,3 +1,9 @@
+- name: Install dependencies
+  become: yes
+  apt:
+    pkg:
+    - curl
+
 - name: Import grafana repo key
   become: true
   shell: "curl -s https://packages.grafana.com/gpg.key | apt-key add -"

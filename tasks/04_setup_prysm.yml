@@ -3,9 +3,6 @@
   apt:
     pkg:
     - curl
-    - git
-    - gcc
-    - python3-dev
     - acl
 
 - name: Setup prysm from prysm.sh
@@ -44,6 +41,9 @@
     apt:
       pkg:
       - gnupg
+      - git
+      - gcc
+      - python3-dev
 
   - name: Setup package source
     become: yes

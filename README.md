@@ -100,6 +100,9 @@ ethv_20_net: mainnet
 # Make sure to set this to "no" if you run on a VM or on bare-metal
 ethv_docker: yes
 
+# Use IPV6 rules for firewall
+ethv_ufw_ipv6: yes
+
 # Validator Password used during key generation
 ethv_validator_password: "eth2.0-deposit-cli"
 
