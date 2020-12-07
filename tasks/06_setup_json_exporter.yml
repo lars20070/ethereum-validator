@@ -50,6 +50,7 @@
     mode: '0644'
     owner: json_exporter
     group: json_exporter
+  register: config_file_json_exporter
 
 - name: Create json_exporter.service
   become: yes
@@ -71,7 +72,7 @@
   become: true
   command: "systemctl stop json_exporter"
   when:
-    - service_file_json_exporter.changed
+    - service_file_json_exporter.changed or config_file_json_exporter.changed
     - '"inactive" not in service_active_json_exporter.stdout'
 
 - name: Reload systemd
