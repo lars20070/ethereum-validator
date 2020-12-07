@@ -29,7 +29,12 @@ The reason this is not automated in this role, even though it's possible, is tha
 Thanks:
 
 **Somer Esat** for the [guide](https://someresat.medium.com/guide-to-staking-on-ethereum-2-0-ubuntu-medalla-prysm-4d2a86cc637b) that led to this ansible role.
-**Guillaume Mirralles** for the [grafana dashboard](https://raw.githubusercontent.com/GuillaumeMiralles/prysm-grafana-dashboard/master/less_10_validators.json).
+
+[@GuillaumeMiralles](https://github.com/GuillaumeMiralles) for the [prysm grafana dashboard](https://raw.githubusercontent.com/GuillaumeMiralles/prysm-grafana-dashboard/master/less_10_validators.json).
+
+[@metanull-operator](http://github.com/metanull-operator) for the [prysm grafana dashboard](http://github.com/metanull-operator/eth2-grafana).
+
+[@karalabe](http://github.com/karalabe) for the [geth dashboard](https://gist.github.com/karalabe/e7ca79abdec54755ceae09c08bd090cd).
 
 Run it with molecule
 --------------------

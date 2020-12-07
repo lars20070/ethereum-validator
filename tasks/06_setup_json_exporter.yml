@@ -1,0 +1,85 @@
+- name: Add the user json_exporter
+  become: yes
+  user:
+    name: json_exporter
+    comment: json_exporter user with no shell access
+    shell: /bin/false
+
+- name: Check if json_exporter is already installed
+  stat:
+    path: /usr/local/bin/json_exporter
+  register: stat_result
+
+- name: Install json_exporter
+  when: not stat_result.stat.exists
+  block:
+  - name: Download json_exporter
+    get_url:
+      url: "https://github.com/prometheus-community/json_exporter/releases/download/v0.2.0/json_exporter-0.2.0.linux-amd64.tar.gz"
+      dest: /tmp
+
+  - name: Unpack json_exporter
+    command:
+      cmd: "tar xvf json_exporter-0.2.0.linux-amd64.tar.gz"
+      chdir: /tmp
+
+  - name: Copy json_exporter binary to /usr/local/bin
+    become: yes
+    copy:
+      remote_src: yes
+      src: "/tmp/json_exporter-0.2.0.linux-amd64/json_exporter"
+      dest: "/usr/local/bin/json_exporter"
+      owner: json_exporter
+      group: json_exporter
+      mode: '0755'
+
+- name: Create config directory for json_exporter
+  become: yes
+  file:
+    path: /etc/json_exporter
+    state: directory
+    owner: json_exporter
+    group: json_exporter
+    mode: '0755'
+
+- name: Create json_exporter.yml config file
+  become: yes
+  template:
+    src: files/json_exporter.yml
+    dest: "/etc/json_exporter/json_exporter.yml"
+    mode: '0644'
+    owner: json_exporter
+    group: json_exporter
+
+- name: Create json_exporter.service
+  become: yes
+  template:
+    src: templates/json_exporter.service.j2
+    dest: "/etc/systemd/system/json_exporter.service"
+    mode: '0644'
+    owner: root
+    group: root
+  register: service_file_json_exporter
+
+- name: Check if json_exporter is already running
+  become: true
+  command: "systemctl is-active json_exporter"
+  register: service_active_json_exporter
+  ignore_errors: yes
+
+- name: Stop json_exporter if it was already running
+  become: true
+  command: "systemctl stop json_exporter"
+  when:
+    - service_file_json_exporter.changed
+    - '"inactive" not in service_active_json_exporter.stdout'
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+  when:
+    - service_file_json_exporter.changed
+
+- name: Start json_exporter service
+  become: yes
+  command: "systemctl enable --now json_exporter"

@@ -1,0 +1,15 @@
+[Unit]
+Description=JSON Exporter
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+{% if not ethv_docker %}
+User=json_exporter
+Group=json_exporter
+{% endif %}
+ExecStart=/usr/local/bin/json_exporter --config.file /etc/json_exporter/json_exporter.yml
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=Blackbox Exporter
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+{% if not ethv_docker %}
+User=blackbox_exporter
+Group=blackbox_exporter
+{% endif %}
+ExecStart=/usr/local/bin/blackbox_exporter --config.file /etc/blackbox_exporter/blackbox_exporter.yml
+
+[Install]
+WantedBy=multi-user.target
