@@ -1,0 +1,85 @@
+- name: Add the user blackbox_exporter
+  become: yes
+  user:
+    name: blackbox_exporter
+    comment: blackbox_exporter user with no shell access
+    shell: /bin/false
+
+- name: Check if blackbox_exporter is already installed
+  stat:
+    path: /usr/local/bin/blackbox_exporter
+  register: stat_result
+
+- name: Install blackbox_exporter
+  when: not stat_result.stat.exists
+  block:
+  - name: Download blackbox_exporter
+    get_url:
+      url: "https://github.com/prometheus/blackbox_exporter/releases/download/v0.18.0/blackbox_exporter-0.18.0.linux-amd64.tar.gz"
+      dest: /tmp
+
+  - name: Unpack blackbox_exporter
+    command:
+      cmd: "tar xvf blackbox_exporter-0.18.0.linux-amd64.tar.gz"
+      chdir: /tmp
+
+  - name: Copy blackbox_exporter binary to /usr/local/bin
+    become: yes
+    copy:
+      remote_src: yes
+      src: "/tmp/blackbox_exporter-0.18.0.linux-amd64/blackbox_exporter"
+      dest: "/usr/local/bin/blackbox_exporter"
+      owner: blackbox_exporter
+      group: blackbox_exporter
+      mode: '0755'
+
+- name: Create config directory for blackbox_exporter
+  become: yes
+  file:
+    path: /etc/blackbox_exporter
+    state: directory
+    owner: blackbox_exporter
+    group: blackbox_exporter
+    mode: '0755'
+
+- name: Create blackbox_exporter.yml config file
+  become: yes
+  template:
+    src: files/blackbox_exporter.yml
+    dest: "/etc/blackbox_exporter/blackbox_exporter.yml"
+    mode: '0644'
+    owner: blackbox_exporter
+    group: blackbox_exporter
+
+- name: Create blackbox_exporter.service
+  become: yes
+  template:
+    src: templates/blackbox_exporter.service.j2
+    dest: "/etc/systemd/system/blackbox_exporter.service"
+    mode: '0644'
+    owner: root
+    group: root
+  register: service_file_blackbox_exporter
+
+- name: Check if blackbox_exporter is already running
+  become: true
+  command: "systemctl is-active blackbox_exporter"
+  register: service_active_blackbox_exporter
+  ignore_errors: yes
+
+- name: Stop blackbox_exporter if it was already running
+  become: true
+  command: "systemctl stop blackbox_exporter"
+  when:
+    - service_file_blackbox_exporter.changed
+    - '"inactive" not in service_active_blackbox_exporter.stdout'
+
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+  when:
+    - service_file_blackbox_exporter.changed
+
+- name: Start blackbox_exporter service
+  become: yes
+  command: "systemctl enable --now blackbox_exporter"

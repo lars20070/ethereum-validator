@@ -21,5 +21,11 @@
 - name: Setup Node Exporter
   import_tasks: 06_setup_node_exporter.yml
 
+- name: Setup JSON Exporter
+  import_tasks: 06_setup_json_exporter.yml
+
+- name: Setup Blackbox Exporter
+  import_tasks: 06_setup_blackbox_exporter.yml
+
 - name: Setup Grafana
   import_tasks: 07_setup_grafana.yml

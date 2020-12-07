@@ -110,7 +110,7 @@
     validate_certs: false
   when: datasource is not defined or datasource.json.id is not defined
 
-- name: Upload Prysm Dashboard
+- name: Upload Prysm Dashboard from Guillaume Miralles
   uri:
     url: "{{ ethv_grafana_protocol }}://{{ ethv_grafana_domain }}:{{ ethv_grafana_port }}/api/dashboards/db"
     method: POST
@@ -118,12 +118,12 @@
       Authorization: "Bearer {{ grafana_auth.json.key }}"
       Content-Type: application/json
     body:
-      dashboard: "{{ lookup('file', 'grafana-prysm-dashboard.json') }}"
+      dashboard: "{{ lookup('file', 'grafana/prysm/dashboard-guillaume-miralles.json') }}"
       overwrite: true
     body_format: json
     validate_certs: false
 
-- name: Upload Geth Dashboard
+- name: Upload Prysm Dashboard from Metanull Operator
   uri:
     url: "{{ ethv_grafana_protocol }}://{{ ethv_grafana_domain }}:{{ ethv_grafana_port }}/api/dashboards/db"
     method: POST
@@ -131,7 +131,20 @@
       Authorization: "Bearer {{ grafana_auth.json.key }}"
       Content-Type: application/json
     body:
-      dashboard: "{{ lookup('file', 'grafana-geth-dashboard.json') }}"
+      dashboard: "{{ lookup('template', 'grafana/prysm/dashboard-metanull-operator.json.j2') }}"
+      overwrite: true
+    body_format: json
+    validate_certs: false
+
+- name: Upload Geth Dashboard from Karalabe
+  uri:
+    url: "{{ ethv_grafana_protocol }}://{{ ethv_grafana_domain }}:{{ ethv_grafana_port }}/api/dashboards/db"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ grafana_auth.json.key }}"
+      Content-Type: application/json
+    body:
+      dashboard: "{{ lookup('file', 'grafana/geth/dashboard-karalabe.json') }}"
       overwrite: true
     body_format: json
     validate_certs: false
