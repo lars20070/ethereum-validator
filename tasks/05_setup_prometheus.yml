@@ -86,6 +86,7 @@
     dest: "/etc/prometheus/prometheus.yml"
     owner: prometheus
     group: prometheus
+  register: config_file_prometheus
 
 - name: Create prometheus.service
   become: yes
@@ -107,7 +108,7 @@
   become: true
   command: "systemctl stop prometheus"
   when:
-    - service_file_prometheus.changed
+    - service_file_prometheus.changed or config_file_prometheus.changed
     - '"inactive" not in service_active.stdout'
 
 - name: Reload systemd

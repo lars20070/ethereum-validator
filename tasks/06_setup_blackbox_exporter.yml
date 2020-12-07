@@ -50,6 +50,7 @@
     mode: '0644'
     owner: blackbox_exporter
     group: blackbox_exporter
+  register: config_file_blackbox_exporter
 
 - name: Create blackbox_exporter.service
   become: yes
@@ -71,7 +72,7 @@
   become: true
   command: "systemctl stop blackbox_exporter"
   when:
-    - service_file_blackbox_exporter.changed
+    - service_file_blackbox_exporter.changed or config_file_blackbox_exporter.changed
     - '"inactive" not in service_active_blackbox_exporter.stdout'
 
 - name: Reload systemd
