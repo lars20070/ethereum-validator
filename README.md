@@ -101,9 +101,6 @@ ethv_ntp_fallback: ntp.ubuntu.com
 # Number of validators
 ethv_number_validators: "1"
 
-# The http endpoint for an Ethereum 1.0 node (e.g. infura)
-ethv_10_http_provider: "http://127.0.0.1:8545"
-
 # Geth cache
 ethv_10_cache: "1024"
 
@@ -165,6 +162,12 @@ ethv_reboot_after_update: yes
 #
 # Prysm eth2.0 client specific - https://github.com/prysmaticlabs/prysm
 #
+
+# The http endpoint for an Ethereum 1.0 node (e.g. geth)
+ethv_10_http_provider: "http://127.0.0.1:8545"
+
+# The http endpoint for an Ethereum 1.0 node (e.g. infura)
+ethv_10_fallback_http_provider: ""
 
 # If not built from source, the official prysm.sh installer is used
 ethv_prysm_build_from_source: no
