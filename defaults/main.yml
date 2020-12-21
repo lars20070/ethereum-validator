@@ -98,3 +98,6 @@ ethv_prysm_validator_binary: "/usr/local/bin/validator"
 # Seconds to wait before starting the service
 # This acts as a slashing protection for decreasing the chance to double attestations
 ethv_prysm_pre_start_delay: 780
+
+# The max number of p2p peers to maintain
+ethv_prysm_beacon_chain_maxpeers: 30
