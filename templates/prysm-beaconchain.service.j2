@@ -12,9 +12,9 @@ Group=prysm-beaconchain
 Restart=always
 RestartSec=5
 {% if ethv_10_fallback_http_provider != "" %}
-ExecStart={{ ethv_prysm_beacon_chain_binary }} --{{ ethv_20_net }} --datadir=/var/lib/prysm/beaconchain --http-web3provider={{ ethv_10_http_provider }} --fallback-web3provider={{ ethv_10_fallback_http_provider }} --accept-terms-of-use
+ExecStart={{ ethv_prysm_beacon_chain_binary }} --{{ ethv_20_net }} --datadir=/var/lib/prysm/beaconchain --http-web3provider={{ ethv_10_http_provider }} --fallback-web3provider={{ ethv_10_fallback_http_provider }} --p2p-max-peers={{ ethv_prysm_beacon_chain_maxpeers }} --accept-terms-of-use
 {% else %}
-ExecStart={{ ethv_prysm_beacon_chain_binary }} --{{ ethv_20_net }} --datadir=/var/lib/prysm/beaconchain --http-web3provider={{ ethv_10_http_provider }} --accept-terms-of-use
+ExecStart={{ ethv_prysm_beacon_chain_binary }} --{{ ethv_20_net }} --datadir=/var/lib/prysm/beaconchain --http-web3provider={{ ethv_10_http_provider }} --p2p-max-peers={{ ethv_prysm_beacon_chain_maxpeers }} --accept-terms-of-use
 {% endif %}
 
 [Install]
