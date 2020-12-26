@@ -25,7 +25,6 @@
   community.general.ufw:
     rule: allow
     port: '30303'
-    proto: tcp
 
 - name: Allow Prysm Validator Client TCP
   become: yes
