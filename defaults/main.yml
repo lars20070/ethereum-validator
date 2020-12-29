@@ -40,6 +40,22 @@ ethv_wallet_password: "eth2.0-deposit-cli"
 # String to include in proposed blocks
 ethv_graffiti: "helloitsme"
 
+# Name of the validator_keys folder in files/ - useful if you test with multiple different ones
+ethv_validator_keys_folder: "validator_keys"
+
+# Reboot after update
+ethv_reboot_after_update: yes
+
+#
+# Monitoring
+#
+
+# Enable monitoring
+ethv_monitoring: no
+
+# Expose monitoring through the firewall
+ethv_monitoring_expose: no
+
 # Grafana admin password
 ethv_grafana_admin_password: "admin"
 
@@ -66,12 +82,6 @@ ethv_grafana_smtp_user: ""
 
 # Grafana Mail notification smtp password
 ethv_grafana_smtp_password: ""
-
-# Name of the validator_keys folder in files/ - useful if you test with multiple different ones
-ethv_validator_keys_folder: "validator_keys"
-
-# Reboot after update
-ethv_reboot_after_update: yes
 
 #
 # Prysm eth2.0 client specific - https://github.com/prysmaticlabs/prysm
