@@ -46,3 +46,6 @@
     rule: allow
     port: '{{ ethv_grafana_port }}'
     proto: tcp
+  when:
+    - ethv_monitoring
+    - ethv_monitoring_expose
