@@ -144,27 +144,6 @@
     comment: prysm-validator user with no shell access
     shell: /bin/false
 
-# Upload validator keys
-- name: Create directory for validator keys
-  become: yes
-  file:
-    path: "/home/prysm-validator/.validator_keys"
-    state: directory
-    owner: prysm-validator
-    group: prysm-validator
-    mode: '0700'
-
-- name: Copy validator_keys to remote node
-  become: yes
-  copy:
-    src: "{{ item }}"
-    dest: "/home/prysm-validator/.validator_keys"
-    mode: '0600'
-    owner: prysm-validator
-    group: prysm-validator
-  with_fileglob:
-    - "files/{{ ethv_validator_keys_folder }}/*"
-
 - name: Create data directory for validator
   become: yes
   file:
@@ -219,12 +198,39 @@
 - debug:
     var: ethv_prysm_account_pubkey
 
-- name: Import validator account
-  become: yes
-  become_user: prysm-validator
-  command: "prysm.sh validator -- accounts import --keys-dir=/home/prysm-validator/.validator_keys --accept-terms-of-use --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator/ --wallet-password-file /var/lib/prysm/validator/walletpassword.txt --account-password-file /var/lib/prysm/validator/validatorpassword.txt"
-  # when not already imported
+- name: Upload and import validator keys on the first run
   when: not ethv_prysm_account_pubkey in ethv_prysm_account_list_pubkey
+  block:
+  - name: Create directory for validator keys
+    become: yes
+    file:
+      path: "/home/prysm-validator/.validator_keys"
+      state: directory
+      owner: prysm-validator
+      group: prysm-validator
+      mode: '0700'
+
+  - name: Copy validator_keys to remote node
+    become: yes
+    copy:
+      src: "{{ item }}"
+      dest: "/home/prysm-validator/.validator_keys"
+      mode: '0600'
+      owner: prysm-validator
+      group: prysm-validator
+    with_fileglob:
+      - "files/{{ ethv_validator_keys_folder }}/*"
+
+  - name: Import validator account
+    become: yes
+    become_user: prysm-validator
+    command: "prysm.sh validator -- accounts import --keys-dir=/home/prysm-validator/.validator_keys --accept-terms-of-use --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator/ --wallet-password-file /var/lib/prysm/validator/walletpassword.txt --account-password-file /var/lib/prysm/validator/validatorpassword.txt"
+
+  - name: Remove validator keys folder
+    become: yes
+    file:
+      path: "/home/prysm-validator/.validator_keys"
+      state: absent
 
 - name: Copy prysm-validator.service to remote node
   become: yes
