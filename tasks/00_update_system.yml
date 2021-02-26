@@ -15,13 +15,15 @@
 
 - name: Check if services are running and gracefully stop them before reboot
   become: yes
-  shell: "systemctl is-active --quiet {{ item }} && systemctl stop {{ item }}"
+  shell: "systemctl is-active --quiet {{ item }} && systemctl disable --now {{ item }}"
   with_items:
     - geth
     - prysm-beaconchain
     - prysm-validator
     - prometheus
     - node_exporter
+    - blackbox_exporter
+    - json_exporter
     - grafana-server
   when: reboot_required.stat.exists and ethv_reboot_after_update
   ignore_errors: true
