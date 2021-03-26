@@ -107,6 +107,9 @@ ethv_10_cache: "1024"
 # Ethereum 1.0 Chain network
 ethv_10_net: ""
 
+# Ethereum 1.0 Chain maximum number of peers
+ethv_10_maxpeers: 50
+
 # Ethereum 2.0 Client network
 ethv_20_net: mainnet
 
