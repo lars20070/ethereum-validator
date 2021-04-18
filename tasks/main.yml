@@ -6,11 +6,11 @@
 - name: Setup firewall
   import_tasks: 01_setup_firewall.yml
 
-# - name: Setup NTP
-#   import_tasks: 02_setup_ntp.yml
+- name: Setup NTP
+  import_tasks: 02_setup_ntp.yml
 
-# - name: Setup Geth
-#   import_tasks: 03_setup_geth.yml
+- name: Setup Geth
+  import_tasks: 03_setup_geth.yml
 
 # - name: Setup Prysm
 #   import_tasks: 04_setup_prysm.yml
