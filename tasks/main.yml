@@ -12,8 +12,8 @@
 - name: Setup Geth
   import_tasks: 03_setup_geth.yml
 
-# - name: Setup Prysm
-#   import_tasks: 04_setup_prysm.yml
+- name: Setup Prysm
+  import_tasks: 04_setup_prysm.yml
 
 # - name: Setup Monitoring
 #   block:
