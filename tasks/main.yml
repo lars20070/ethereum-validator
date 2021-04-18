@@ -3,8 +3,8 @@
 - name: Update system
   import_tasks: 00_update_system.yml
 
-# - name: Setup firewall
-#   import_tasks: 01_setup_firewall.yml
+- name: Setup firewall
+  import_tasks: 01_setup_firewall.yml
 
 # - name: Setup NTP
 #   import_tasks: 02_setup_ntp.yml

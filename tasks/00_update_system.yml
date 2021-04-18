@@ -3,37 +3,37 @@
   apt:
     update_cache: yes
 
-# - name: Upgrade all packages on servers
-#   become: yes
-#   apt:
-#     upgrade: safe
-#     force_apt_get: yes
+- name: Upgrade all packages on servers
+  become: yes
+  apt:
+    upgrade: safe
+    force_apt_get: yes
 
-# - name: Check if reboot is necessary
-#   register: reboot_required
-#   stat: path=/var/run/reboot-required get_md5=no
+- name: Check if reboot is necessary
+  register: reboot_required
+  stat: path=/var/run/reboot-required get_md5=no
 
-# - name: Check if services are running and gracefully stop them before reboot
-#   become: yes
-#   shell: "systemctl is-active --quiet {{ item }} && systemctl disable --now {{ item }}"
-#   with_items:
-#     - geth
-#     - prysm-beaconchain
-#     - prysm-validator
-#     - prometheus
-#     - node_exporter
-#     - blackbox_exporter
-#     - json_exporter
-#     - grafana-server
-#   when: reboot_required.stat.exists and ethv_reboot_after_update
-#   ignore_errors: true
+- name: Check if services are running and gracefully stop them before reboot
+  become: yes
+  shell: "systemctl is-active --quiet {{ item }} && systemctl disable --now {{ item }}"
+  with_items:
+    - geth
+    - prysm-beaconchain
+    - prysm-validator
+    - prometheus
+    - node_exporter
+    - blackbox_exporter
+    - json_exporter
+    - grafana-server
+  when: reboot_required.stat.exists and ethv_reboot_after_update
+  ignore_errors: true
 
-# - name: Reboot
-#   become: yes
-#   reboot:
-#     msg: Rebooting machine
-#     connect_timeout: 5
-#     reboot_timeout: 300
-#     pre_reboot_delay: 0
-#     post_reboot_delay: 30
-#   when: reboot_required.stat.exists and ethv_reboot_after_update
+- name: Reboot
+  become: yes
+  reboot:
+    msg: Rebooting machine
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+  when: reboot_required.stat.exists and ethv_reboot_after_update
