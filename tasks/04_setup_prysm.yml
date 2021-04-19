@@ -136,134 +136,134 @@
   become: yes
   command: "systemctl enable --now prysm-beaconchain"
 
-# # Set up validator
-# - name: Add the user prysm-validator
-#   become: yes
-#   user:
-#     name: prysm-validator
-#     create_home: yes
-#     comment: prysm-validator user with no shell access
-#     shell: /bin/false
+# Set up validator
+- name: Add the user prysm-validator
+  become: yes
+  user:
+    name: prysm-validator
+    create_home: yes
+    comment: prysm-validator user with no shell access
+    shell: /bin/false
 
-# - name: Create data directory for validator
-#   become: yes
-#   file:
-#     path: /var/lib/prysm/validator
-#     state: directory
-#     owner: prysm-validator
-#     group: prysm-validator
-#     mode: '0755'
+- name: Create data directory for validator
+  become: yes
+  file:
+    path: /var/lib/prysm/validator
+    state: directory
+    owner: prysm-validator
+    group: prysm-validator
+    mode: '0755'
 
-# - name: Create password for validator
-#   become: yes
-#   copy:
-#     content: "{{ ethv_validator_password }}"
-#     dest: /var/lib/prysm/validator/validatorpassword.txt
-#     mode: '0600'
-#     owner: prysm-validator
-#     group: prysm-validator
+- name: Create password for validator
+  become: yes
+  copy:
+    content: "{{ ethv_validator_password }}"
+    dest: /var/lib/prysm/validator/validatorpassword.txt
+    mode: '0600'
+    owner: prysm-validator
+    group: prysm-validator
 
-# - name: Create password for the wallet
-#   become: yes
-#   copy:
-#     content: "{{ ethv_wallet_password }}"
-#     dest: /var/lib/prysm/validator/walletpassword.txt
-#     mode: '0600'
-#     owner: prysm-validator
-#     group: prysm-validator
+- name: Create password for the wallet
+  become: yes
+  copy:
+    content: "{{ ethv_wallet_password }}"
+    dest: /var/lib/prysm/validator/walletpassword.txt
+    mode: '0600'
+    owner: prysm-validator
+    group: prysm-validator
 
-# - name: Check if account is already imported
-#   become: yes
-#   become_user: prysm-validator
-#   command: "prysm.sh validator -- accounts list --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator --accept-terms-of-use --wallet-password-file /var/lib/prysm/validator/walletpassword.txt"
-#   register: accounts_list
-#   failed_when:
-#     - accounts_list.rc != 0
-#     - "'no wallet found' not in accounts_list.stderr"
+- name: Check if account is already imported
+  become: yes
+  become_user: prysm-validator
+  command: "prysm.sh validator -- accounts list --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator --accept-terms-of-use --wallet-password-file /var/lib/prysm/validator/walletpassword.txt"
+  register: accounts_list
+  failed_when:
+    - accounts_list.rc != 0
+    - "'no wallet found' not in accounts_list.stderr"
 
-# - name: Set Account list pubkey fact
-#   set_fact:
-#     ethv_prysm_account_list_pubkey: "{{ accounts_list.stdout | regex_search('(?<=validating public key])(.*)') | trim }}"
+- name: Set Account list pubkey fact
+  set_fact:
+    ethv_prysm_account_list_pubkey: "{{ accounts_list.stdout | regex_search('(?<=validating public key])(.*)') | trim }}"
 
-# - name: debug output
-#   debug:
-#     var: ethv_prysm_account_list_pubkey
+- name: debug output
+  debug:
+    var: ethv_prysm_account_list_pubkey
 
-# - name: Get deposit_data filename
-#   set_fact:
-#     deposit_data_filepath: "{{ lookup('fileglob', 'files/{{ ethv_validator_keys_folder }}/deposit_data*.json') }}"
+- name: Get deposit_data filename
+  set_fact:
+    deposit_data_filepath: "{{ lookup('fileglob', 'files/{{ ethv_validator_keys_folder }}/deposit_data*.json') }}"
 
-# - name: Set Account pubkey fact
-#   set_fact:
-#     ethv_prysm_account_pubkey: "{{ lookup('file', '{{ deposit_data_filepath }}') | from_json | json_query('[0].pubkey') }}"
+- name: Set Account pubkey fact
+  set_fact:
+    ethv_prysm_account_pubkey: "{{ lookup('file', '{{ deposit_data_filepath }}') | from_json | json_query('[0].pubkey') }}"
 
-# - name: debug output
-#   debug:
-#     var: ethv_prysm_account_pubkey
+- name: debug output
+  debug:
+    var: ethv_prysm_account_pubkey
 
-# - name: Upload and import validator keys on the first run
-#   when: not ethv_prysm_account_pubkey in ethv_prysm_account_list_pubkey
-#   block:
-#   - name: Create directory for validator keys
-#     become: yes
-#     file:
-#       path: "/home/prysm-validator/.validator_keys"
-#       state: directory
-#       owner: prysm-validator
-#       group: prysm-validator
-#       mode: '0700'
+- name: Upload and import validator keys on the first run
+  when: not ethv_prysm_account_pubkey in ethv_prysm_account_list_pubkey
+  block:
+  - name: Create directory for validator keys
+    become: yes
+    file:
+      path: "/home/prysm-validator/.validator_keys"
+      state: directory
+      owner: prysm-validator
+      group: prysm-validator
+      mode: '0700'
 
-#   - name: Copy validator_keys to remote node
-#     become: yes
-#     copy:
-#       src: "{{ item }}"
-#       dest: "/home/prysm-validator/.validator_keys"
-#       mode: '0600'
-#       owner: prysm-validator
-#       group: prysm-validator
-#     with_fileglob:
-#       - "files/{{ ethv_validator_keys_folder }}/*"
+  - name: Copy validator_keys to remote node
+    become: yes
+    copy:
+      src: "{{ item }}"
+      dest: "/home/prysm-validator/.validator_keys"
+      mode: '0600'
+      owner: prysm-validator
+      group: prysm-validator
+    with_fileglob:
+      - "files/{{ ethv_validator_keys_folder }}/*"
 
-#   - name: Import validator account
-#     become: yes
-#     become_user: prysm-validator
-#     command: "prysm.sh validator -- accounts import --keys-dir=/home/prysm-validator/.validator_keys --accept-terms-of-use --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator/ --wallet-password-file /var/lib/prysm/validator/walletpassword.txt --account-password-file /var/lib/prysm/validator/validatorpassword.txt"
+  - name: Import validator account
+    become: yes
+    become_user: prysm-validator
+    command: "prysm.sh validator -- accounts import --keys-dir=/home/prysm-validator/.validator_keys --accept-terms-of-use --{{ ethv_20_net }} --wallet-dir /var/lib/prysm/validator/ --wallet-password-file /var/lib/prysm/validator/walletpassword.txt --account-password-file /var/lib/prysm/validator/validatorpassword.txt"
 
-#   - name: Remove validator keys folder
-#     become: yes
-#     file:
-#       path: "/home/prysm-validator/.validator_keys"
-#       state: absent
+  - name: Remove validator keys folder
+    become: yes
+    file:
+      path: "/home/prysm-validator/.validator_keys"
+      state: absent
 
-# - name: Copy prysm-validator.service to remote node
-#   become: yes
-#   template:
-#     src: templates/prysm-validator.service.j2
-#     dest: /etc/systemd/system/prysm-validator.service
-#     mode: '0644'
-#     owner: root
-#     group: root
-#   register: service_file_validator
+- name: Copy prysm-validator.service to remote node
+  become: yes
+  template:
+    src: templates/prysm-validator.service.j2
+    dest: /etc/systemd/system/prysm-validator.service
+    mode: '0644'
+    owner: root
+    group: root
+  register: service_file_validator
 
-# - name: Check if prysm-validator is already running
-#   become: true
-#   command: "systemctl is-active prysm-validator"
-#   register: service_active_validator
-#   failed_when: false
-#   changed_when: false
+- name: Check if prysm-validator is already running
+  become: true
+  command: "systemctl is-active prysm-validator"
+  register: service_active_validator
+  failed_when: false
+  changed_when: false
 
-# - name: Stop Service to prevent database corruption
-#   become: yes
-#   command: "systemctl stop prysm-validator"
-#   when:
-#     - service_file_validator.changed
-#     - '"inactive" not in service_active_validator.stdout'
+- name: Stop Service to prevent database corruption
+  become: yes
+  command: "systemctl stop prysm-validator"
+  when:
+    - service_file_validator.changed
+    - '"inactive" not in service_active_validator.stdout'
 
-# - name: Reload systemd
-#   become: yes
-#   command: "systemctl daemon-reload"
-#   when: service_file_validator.changed
+- name: Reload systemd
+  become: yes
+  command: "systemctl daemon-reload"
+  when: service_file_validator.changed
 
-# - name: Start prysm-validator service
-#   become: yes
-#   command: "systemctl enable --now prysm-validator"
+- name: Start prysm-validator service
+  become: yes
+  command: "systemctl enable --now prysm-validator"
