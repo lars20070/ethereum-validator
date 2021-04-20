@@ -7,6 +7,8 @@
 - name: Import grafana repo key
   become: true
   shell: "curl -s https://packages.grafana.com/gpg.key | apt-key add -"
+  args:
+    warn: false
 
 - name: Add grafana repository from PPA
   become: yes
@@ -27,6 +29,12 @@
     name: grafana
     state: present
 
+- name: Create a grafana directory
+  become: yes
+  file:
+    path: /etc/grafana
+    state: directory
+
 - name: Copy grafana.ini to remote node
   become: yes
   template:
@@ -41,7 +49,8 @@
   become: true
   command: "systemctl is-active grafana-server"
   register: service_active_grafana
-  ignore_errors: yes
+  failed_when: false
+  changed_when: false
 
 - name: Stop grafana if it was already running
   become: true
@@ -124,18 +133,19 @@
     body_format: json
     validate_certs: false
 
-- name: Upload Prysm Dashboard from Metanull Operator
-  uri:
-    url: "{{ ethv_grafana_protocol }}://{{ ethv_grafana_domain }}:{{ ethv_grafana_port }}/api/dashboards/db"
-    method: POST
-    headers:
-      Authorization: "Bearer {{ grafana_auth.json.key }}"
-      Content-Type: application/json
-    body:
-      dashboard: "{{ lookup('template', 'grafana/prysm/dashboard-metanull-operator.json.j2') }}"
-      overwrite: true
-    body_format: json
-    validate_certs: false
+# # ERROR: ansible_default_ipv4 undefined.
+# - name: Upload Prysm Dashboard from Metanull Operator
+#   uri:
+#     url: "{{ ethv_grafana_protocol }}://{{ ethv_grafana_domain }}:{{ ethv_grafana_port }}/api/dashboards/db"
+#     method: POST
+#     headers:
+#       Authorization: "Bearer {{ grafana_auth.json.key }}"
+#       Content-Type: application/json
+#     body:
+#       dashboard: "{{ lookup('template', 'grafana/prysm/dashboard-metanull-operator.json.j2') }}"
+#       overwrite: true
+#     body_format: json
+#     validate_certs: false
 
 - name: Upload Geth Dashboard from Karalabe
   uri:
