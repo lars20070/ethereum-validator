@@ -10,8 +10,9 @@
     force_apt_get: yes
 
 - name: Check if reboot is necessary
+  stat:
+    path: /var/run/reboot-required get_md5=no
   register: reboot_required
-  stat: path=/var/run/reboot-required get_md5=no
 
 - name: Check if services are running and gracefully stop them before reboot
   become: yes

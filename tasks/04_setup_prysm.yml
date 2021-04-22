@@ -80,7 +80,7 @@
     command:
       cmd: "bazel build //beacon-chain:beacon-chain --config=release"
       chdir: /srv/prysm
-  
+
   - name: Build validator
     command:
       cmd: "bazel build //validator:validator --config=release"
@@ -184,7 +184,8 @@
   set_fact:
     ethv_prysm_account_list_pubkey: "{{ accounts_list.stdout | regex_search('(?<=validating public key])(.*)') | trim }}"
 
-- debug:
+- name: debug output
+  debug:
     var: ethv_prysm_account_list_pubkey
 
 - name: Get deposit_data filename
@@ -195,7 +196,8 @@
   set_fact:
     ethv_prysm_account_pubkey: "{{ lookup('file', '{{ deposit_data_filepath }}') | from_json | json_query('[0].pubkey') }}"
 
-- debug:
+- name: debug output
+  debug:
     var: ethv_prysm_account_pubkey
 
 - name: Upload and import validator keys on the first run

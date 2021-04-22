@@ -7,6 +7,8 @@
 - name: Import grafana repo key
   become: true
   shell: "curl -s https://packages.grafana.com/gpg.key | apt-key add -"
+  args:
+    warn: false
 
 - name: Add grafana repository from PPA
   become: yes
@@ -26,6 +28,12 @@
   apt:
     name: grafana
     state: present
+
+- name: Create a grafana directory
+  become: yes
+  file:
+    path: /etc/grafana
+    state: directory
 
 - name: Copy grafana.ini to remote node
   become: yes
