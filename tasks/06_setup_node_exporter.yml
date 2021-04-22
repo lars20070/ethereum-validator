@@ -43,7 +43,8 @@
   become: true
   command: "systemctl is-active node_exporter"
   register: service_active_node_exporter
-  ignore_errors: yes
+  failed_when: false
+  changed_when: false
 
 - name: Stop node_exporter if it was already running
   become: true
