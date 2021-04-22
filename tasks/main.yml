@@ -29,6 +29,6 @@
     - name: Setup Blackbox Exporter
       import_tasks: 06_setup_blackbox_exporter.yml
 
-#     - name: Setup Grafana
-#       import_tasks: 07_setup_grafana.yml
+    - name: Setup Grafana
+      import_tasks: 07_setup_grafana.yml
   when: ethv_monitoring
