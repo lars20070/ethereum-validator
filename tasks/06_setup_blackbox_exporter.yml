@@ -62,8 +62,7 @@
   become: true
   command: "systemctl is-active blackbox_exporter"
   register: service_active_blackbox_exporter
-  failed_when: false
-  changed_when: false
+  ignore_errors: yes
 
 - name: Stop blackbox_exporter if it was already running
   become: true

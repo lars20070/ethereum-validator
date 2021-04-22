@@ -49,8 +49,7 @@
   become: true
   command: "systemctl is-active grafana-server"
   register: service_active_grafana
-  failed_when: false
-  changed_when: false
+  ignore_errors: yes
 
 - name: Stop grafana if it was already running
   become: true

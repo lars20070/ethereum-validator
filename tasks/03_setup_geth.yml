@@ -45,8 +45,7 @@
   become: true
   command: "systemctl is-active geth"
   register: service_active_geth
-  failed_when: false
-  changed_when: false
+  ignore_errors: yes
 
 - name: Stop Service to prevent database corruption
   become: yes

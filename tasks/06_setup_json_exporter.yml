@@ -62,8 +62,7 @@
   become: true
   command: "systemctl is-active json_exporter"
   register: service_active_json_exporter
-  failed_when: false
-  changed_when: false
+  ignore_errors: yes
 
 - name: Stop json_exporter if it was already running
   become: true

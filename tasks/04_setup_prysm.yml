@@ -117,8 +117,7 @@
   become: true
   command: "systemctl is-active prysm-beaconchain"
   register: service_active_beaconchain
-  failed_when: false
-  changed_when: false
+  ignore_errors: yes
 
 - name: Stop Service to prevent database corruption
   become: yes
@@ -249,8 +248,7 @@
   become: true
   command: "systemctl is-active prysm-validator"
   register: service_active_validator
-  failed_when: false
-  changed_when: false
+  ignore_errors: yes
 
 - name: Stop Service to prevent database corruption
   become: yes
